@@ -7,7 +7,7 @@ import sys
 filePath = ''
 filePath2 = ''
 
-p = r'(.*)(pages(=|\s+=|=\s+|\s+=\s+)[{](\s+\d+|\d+)(\s+[-]+|[-]+\s+|[-]+)(\d+|\d+\s+)[}])(.*)'
+p = r'(.*)(pages(=|\s+=|=\s+|\s+=\s+)("|[{])(\s+\d+|\d+)(\s+[-]+\s+|\s+[-]+|[-]+\s+|[-]+)(\d+|\d+\s+)([}]|"))(.*)'
 
 def simplifyDigits(digits):
     a, b = digits
@@ -32,8 +32,8 @@ def replace(filePath, filePath2, pattern):
                 finding = re.match(pattern, line)
                 if (finding):
                     newFile.write(finding.group(1) +
-                                  simplifyDigits([finding.group(4), finding.group(6)]) +
-                                  finding.group(7) + "\n")
+                                  simplifyDigits([finding.group(5), finding.group(7)]) +
+                                  finding.group(9) + "\n")
                 else:
                     newFile.write(line)   
     if (filePath2):
