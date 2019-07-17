@@ -124,6 +124,7 @@ class MainWindow(QLabel):
         if self.line_edit_windws.isModified():
             # Change your Windows path to Debian
             self.line_edit_debian.setText(self.line_edit_windws.text()+'Debian')
+
     
     def run(self):
         self.show()
