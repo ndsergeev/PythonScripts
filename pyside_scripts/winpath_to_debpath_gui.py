@@ -3,7 +3,7 @@ from PySide2.QtWidgets import QApplication, QHBoxLayout
 from PySide2.QtWidgets import QFileDialog, QTextEdit, QSizePolicy
 from PySide2.QtWidgets import QMainWindow, QWidget, QGridLayout
 from PySide2 import QtCore, QtGui
-import sys
+from sys import modules, argv
 
 class MainWindow(QLabel):
     WIDTH = 400
@@ -15,9 +15,7 @@ class MainWindow(QLabel):
     
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
-        
-        self.clipboard = QApplication.clipboard()
-        
+
         # GUI definition
         self.central_widget = QWidget(self)
         self.layout_grid = QGridLayout(self.central_widget)
@@ -73,19 +71,16 @@ class MainWindow(QLabel):
         self.button_copy_debian.setObjectName("button_copy_debian")
         self.button_copy_debian.clicked.connect(self.on_click_button_copy_debian)
         
-        self.line_edit_windws.setFocus()
-        
         self.retranslateUI()
         self.retranslateUIStyleSheet()
         
         # Button deactivation if no pyperclip module
-        try: import pyperclip
-        except ImportError:
+        if not 'pyperclip' in modules:
             self.button_copy_windws.setEnabled(False)
             self.button_copy_debian.setEnabled(False)
             self.button_copy_windws.setStyleSheet("color: rgb(255, 153, 153);")
             self.button_copy_debian.setStyleSheet("color: rgb(255, 153, 153);")
-            self.label_3 = QLabel('Install pyperclip module to copy using button!')
+            self.label_3 = QLabel("Install 'pyperclip' module to copy using button!")
             self.label_3.setStyleSheet("color: rgb(255, 153, 153);")
             self.layout_grid.addWidget(self.label_3, 5, 0)
         
@@ -108,12 +103,10 @@ class MainWindow(QLabel):
     # self.setProperty("houdiniStyle", True)
     
     def on_click_button_copy_windws(self):
-        try: pyperclip.copy(self.line_edit_windws.text())
-        except ImportError: pass
+        pyperclip.copy(self.line_edit_windws.text())
     
     def on_click_button_copy_debian(self):
-        try: pyperclip.copy(self.line_edit_debian.text())
-        except ImportError: pass
+        pyperclip.copy(self.line_edit_debian.text())
     
     def convert_line_edit_windws(self):
         if self.line_edit_debian.isModified():
@@ -125,11 +118,12 @@ class MainWindow(QLabel):
             # Change your Windows path to Debian
             self.line_edit_debian.setText(self.line_edit_windws.text()+'Debian')
 
-    
     def run(self):
         self.show()
         pyqt_app.exec_()
 
 if __name__ == '__main__':
-    pyqt_app = QApplication(sys.argv)
+    try: import pyperclip
+    except: pass
+    pyqt_app = QApplication(argv)
     MainWindow().run()
