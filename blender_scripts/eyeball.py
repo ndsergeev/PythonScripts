@@ -1,16 +1,10 @@
-from mathutils import *
-from math import *
 import bpy
 
-bpy.ops.mesh.primitive_uv_sphere_add(radius=1,
-                        enter_editmode=False,
-                        location=(0, 0, 0))
-bpy.ops.transform.rotate(value=1.5708,
-                        orient_axis='Y',
-                        orient_type='GLOBAL',
-                        orient_matrix=((1, 0, 0),
-                        (0, 1, 0), (0, 0, 1)),
-                        orient_matrix_type='GLOBAL',
-                        constraint_axis=(False, True, False),
-                        mirror=True,
-                        proportional_edit_falloff='SMOOTH')
+master_collection = bpy.context.collection
+
+eyeballs_collection = bpy.data.collections.new(name='Eyeballs Collection')
+master_collection.children.link(eyeballs_collection)
+
+eyeballs_mesh = bpy.data.meshes.new(name='Eyeballs Mesh')
+eyeballs_object = bpy.data.objects.new('Eyeballs Object', eyeballs_mesh)
+eyeballs_collection.objects.link(eyeballs_object)
